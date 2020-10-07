@@ -94,7 +94,9 @@ if [ "$1" = 'postgres' ]; then
 		# internal start of server in order to allow set-up using psql-client
 		# does not listen on external TCP/IP and waits until start finishes
 		PGUSER="${PGUSER:-postgres}" \
-		pg_ctl -D "$PGDATA" \
+        sed -i -e "s/^shared_buffers =.*$/shared_buffers = 16GB/" $PGDATA/postgresql.conf
+        sed -i -e "s/^#max_locks_per_transaction =.*$/max_locks_per_transaction = 512/" $PGDATA/postgresql.conf
+        pg_ctl -D "$PGDATA" \
 			-o "-c listen_addresses='localhost'" \
 			-w start
 
@@ -143,9 +145,11 @@ if [ "$1" = 'postgres' ]; then
                 # internal start of server in order to allow set-up using psql-client
                 # does not listen on external TCP/IP and waits until start finishes
                 PGUSER="${PGUSER:-postgres}" \
-                pg_ctl -D "$PGDATA" \
+                sed -i -e"s/^shared_buffers =.*$/shared_buffers = 16GB/" $PGDATA/postgresql.conf
+                sed -i -e"s/^#max_locks_per_transaction =.*$/max_locks_per_transaction = 512/" $PGDATA/postgresql.conf
+		pg_ctl -D "$PGDATA" \
                         -o "-c listen_addresses='localhost'" \
-                        -w start      
+                        -w start
 
                 file_env 'POSTGRES_USER' 'postgres'
                 file_env 'POSTGRES_DB' "$POSTGRES_USER"
