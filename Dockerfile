@@ -1,4 +1,4 @@
-FROM postgres:13.8
+FROM postgres:15.7
 
 RUN apt-get update \
   && apt-get upgrade --no-install-recommends -y \
